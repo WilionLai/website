@@ -1,0 +1,121 @@
+/* 
+按鈕大小：.toTop-arrow 中的 width 及 height
+按鈕顏色：.toTop-arrow 中的 background 搭配 opacity 設定透明度
+按鈕外型：.toTop-arrow 中的 border-radius，50% 變成圓形按鈕，0% 則是正方形
+浮動位置：.toTop-arrow 中的 right 及 bottom
+箭頭顏色：.toTop-arrow::before, .toTop-arrow::after 中的 background
+箭頭粗細：.toTop-arrow::before, .toTop-arrow::after 中的 height: 7px; 及 width: 31px;
+箭頭位置：.toTop-arrow::before 的 left 及 .toTop-arrow::after 的 right，及兩者的 translate(0, -50%) */
+
+/************** 40px **************/
+/* .toTop-arrow {
+	width: 2.5rem;
+	height: 2.5rem;
+	padding: 0;
+	margin: 0;
+	border: 0;
+	border-radius: 33%;
+	opacity: 0.6;
+	background: #000;
+	cursor: pointer;
+	position:fixed;
+	right: 1rem;
+	bottom: 1rem;
+	display: none;
+}
+.toTop-arrow::before, .toTop-arrow::after {
+	width: 18px;
+	height: 5px;
+	border-radius: 3px;
+	background: #f90;
+	position: absolute;
+	content: "";
+}
+.toTop-arrow::before {
+	transform: rotate(-45deg) translate(0, -50%);
+	left: 0.5rem;
+}
+.toTop-arrow::after {
+	transform: rotate(45deg) translate(0, -50%);
+	right: 0.5rem;
+}
+.toTop-arrow:focus {outline: none;} */
+ 
+ 
+/************** 48px **************/
+/* .toTop-arrow {
+	width: 3rem;
+	height: 3rem;
+	padding: 0;
+	margin: 0;
+	border: 0;
+	border-radius: 33%;
+	opacity: 0.6;
+	background: #000;
+	cursor: pointer;
+	position:fixed;
+	right: 1rem;
+	bottom: 1rem;
+	display: none;
+}
+.toTop-arrow::before, .toTop-arrow::after {
+	width: 25px;
+	height: 6px;
+	border-radius: 3px;
+	background: #f90;
+	position: absolute;
+	content: "";
+}
+.toTop-arrow::before {
+	transform: rotate(-45deg) translate(0, -50%);
+	left: 0.42rem;
+}
+.toTop-arrow::after {
+	transform: rotate(45deg) translate(0, -50%);
+	right: 0.42rem;
+}
+.toTop-arrow:focus {outline: none;} */
+ 
+/************** 56px **************/
+.toTop-arrow {
+	width: 3.5rem;
+	height: 3.5rem;
+	padding: 0;
+	margin: 0;
+	border: 0;
+	border-radius: 33%;
+	opacity: 0.6;
+	background: #000;
+	cursor: pointer;
+	position:fixed;
+	right: 1rem;
+	bottom: 1rem;
+	display: none;
+}
+.toTop-arrow::before, .toTop-arrow::after {
+	width: 31px;
+	height: 7px;
+	border-radius: 3px;
+	background:pink;
+	position: absolute;
+	content: "";
+}
+.toTop-arrow::before {
+	transform: rotate(-45deg) translate(0, -50%);
+	left: 0.4rem;
+}
+.toTop-arrow::after {
+	transform: rotate(45deg) translate(0, -50%);
+	right: 0.4rem;
+}
+.toTop-arrow:focus {outline: none;}
+.toTop-arrow:hover{
+	background: #d13363; /* 滑鼠移上去時，反轉顏色 */
+	width: 5rem;
+	height: 5rem;
+}
+.toTop-arrow:hover::before, .toTop-arrow:hover::after{
+	background: #000;
+	width: 47px;
+	height: 9px;
+}
