@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Eating Snake.</title>
+	<script src="https://d3js.org/d3.v3.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+</head>
+
+<body>
+	<style>
+		body {
+			background-color: rgb(136, 133, 163);
+		}
+
+		button {
+			padding: 6px 12px;
+			font-size: 14px;
+			background-color: #fff;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			margin: 5px;
+		}
+
+		.start {
+			color: white;
+			background-color: red;
+			border: 1px solid transparent;
+		}
+
+		.new {
+			color: white;
+			background-color: #5cb85c;
+			border: 1px solid transparent;
+		}
+
+		#Grids {
+			border: 1.5px solid #ccc;
+			max-width: 250px;
+			max-height: 250px;
+			padding: 50px 50px;
+			margin: 0px auto;
+		}
+		#Control{
+			border: 1.5px solid #ccc;
+			max-width: 250px;
+			max-height: 250px;
+			padding: 15px 50px;
+			margin: 0px auto;
+		}
+		/* #aa{
+			background-color: #5cb85c;
+		} */
+	</style>
+	<!-- <p>Eating Snake</p> -->
+	<div id="Control"></div>
+	<div id="Grids"></div>
+	<!-- <a id="aa" href="ss.html">link</a> -->
+	<!-- <a href="#" onclick="window.open('file:///C:/Users/Wilion/Desktop/test.game/ss.html', 'snack', config='height=500,width=500');">開新視窗</a> -->
+	<script>
+		$(document).ready(function () {
+			var rectW = 25, rectL = 25, cc = 10, delayTime = 100, timerID = 0, stopped = true,
+				nextDir, grids, body, food, head,
+				color = ['white', 'black', 'blue'],
+				directionVectors = {
+					65: [-1, 0], 37: [-1, 0],    // 'A' or Left Arrow
+					87: [0, -1], 38: [0, -1],    // 'W' or Up Arrow
+					68: [1, 0], 39: [1, 0],     // 'D' or Right Arrow
+					83: [0, 1], 40: [0, 1]      // 'S' or Down Arrow
+				};
+
+			var xs = d3.scale.linear().domain([0, rectL]).range([0, rectL * cc]),
+				ys = d3.scale.linear().domain([0, rectW]).range([0, rectW * cc]);
+
+			var rects = d3.select("#Grids")
+				.append("svg:svg")
+				.attr("stroke", "rgba(204,204,204,0.2)")
+				.attr("shape-rendering", "optimizeSpeed")
+				.attr("width", rectL * cc)
+				.attr("height", rectW * cc);
+
+			var ctrl = d3.select("#Control")
+
+			ctrl.append('button')
+				.attr('class', 'new')
+				.text('New')
+				.on('click', function () { return setNewGrid() });
+
+			ctrl.append('button')
+				.attr('class', 'start')
+				.attr('id','start')
+				.text('Start')
+				.on('click', startStop);
+
+			var initialize = function () {
+
+				grids = [];
+				d3.range(rectL).forEach(function (x) {
+					grids[x] = new Array();
+					d3.range(rectW).forEach(function (y) {
+						grids[x][y] = 0;
+					});
+				});
+
+				body = [[0, 0], [0, 1], [0, 2], [0, 3]];
+				head = [0, 3];
+				nextDir = [0, 1];
+
+				makeFood();
+				makeBody();
+
+				rects.selectAll("rect")
+					.data(function () { return setGrid() })
+					.enter()
+					.append("rect")
+					.attr("x", function (d) { return xs(d.x) })
+					.attr("y", function (d) { return ys(d.y) })
+					.attr("width", cc)
+					.attr("height", cc)
+					.attr("fill", function (d) { return color[d.state]; });
+			};
+
+			$(document).keydown(function (event) {
+				var vector = directionVectors[event.which];
+				if (!vector) return;
+				// (right <--> left or up <--> down)
+				if ((vector[0] !== 0 && vector[0] + nextDir[0] === 0) ||
+					(vector[1] !== 0 && vector[1] + nextDir[1] === 0)) {
+					return;
+				}
+				nextDir = vector;
+				event.preventDefault()
+			});
+
+			function collide(a, b) {
+				var k = 0
+				b.forEach(function (x) {
+					if (a[0] == x[0] && a[1] == x[1]) {
+						k = 1;
+					}
+				});
+				return k;
+			};
+
+			function makeFood() {
+				var x, y, k = 1;
+				while (k) {
+					x = Math.floor(Math.random() * rectL);
+					y = Math.floor(Math.random() * rectW);
+					if (!collide([x, y], body))
+						k = 0;
+				}
+				food = [x, y];
+				grids[x][y] = 2;
+			}
+
+			function makeBody() {
+				for (var i in body) {
+					var x = body[i][0],
+						y = body[i][1];
+					grids[x][y] = 1;
+				}
+			}
+
+			var setGrid = function () {
+				var bits = [];
+				for (var i = 0; i < rectL; i++) {
+					for (var j = 0; j < rectW; j++) {
+						bits.push({ "x": i, "y": j, "state": grids[i][j] });
+					}
+				}
+				return bits;
+			};
+
+			var setNewGrid = function () {
+				initialize();
+				displayGrid();
+				nextDir = [0, 1];
+			}
+
+			var move = function () {
+
+				function getNext(i, j) {
+					var x = i[0] + j[0];
+					var y = i[1] + j[1];
+					return [x, y];
+				}
+
+				var nextPos = getNext(head, nextDir);
+
+				if (nextPos[0] < 0 || nextPos[1] < 0 || nextPos[0] >= rectL || nextPos[1] >= rectW) {
+					startStop();
+					alert("BOOM!");
+					javascript: window.location.reload();
+					return;
+				}
+
+				if (collide(nextPos, body)) {
+					startStop();
+					alert("自撞");
+					javascript: window.location.reload();
+					return;
+				}
+
+				head[0] = nextPos[0];
+				head[1] = nextPos[1];
+				body.push([head[0], head[1]]);
+
+				if (nextPos[0] == food[0] && nextPos[1] == food[1]) {
+					makeFood();
+				}
+				else {
+					grids[body[0][0]][body[0][1]] = 0;
+					body.shift();
+				}
+
+				makeBody()
+
+				displayGrid();
+			};
+
+			var displayGrid = function () {
+				rects.selectAll("rect")
+					.data(function () { return setGrid() })
+					.transition()
+					.attr("fill", function (d) { return color[d.state]; })
+					.duration(0);
+			}
+
+			function startStop() {
+				stopped = !stopped;
+				d3.select('button.start')
+					.text(function () { return stopped ? 'Start' : 'Stop'; });
+			}
+
+			var run = function () {
+				clearInterval(timerID);
+				timerID = setInterval(function () { if (!stopped) move(); }, delayTime);
+			}
+
+			initialize();
+			run();
+		});
+		// $(document).ready(function () {
+		// 	$("#start").click(function () {
+		// 		// $("p").slideToggle();
+		// 		alert("BB");
+		// 	});
+		// });
+	</script>
+</body>
+
+</html>
