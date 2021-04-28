@@ -35,7 +35,7 @@
 
 <body>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <div class="bg-light border-bottom shadow-sm sticky-top">
+    <!-- <div class="bg-light border-bottom shadow-sm sticky-top">
         <div class="container">
             <header class="blog-header py-1">
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -62,8 +62,7 @@
                 </nav>
             </header>
         </div>
-        <!--/.container-->
-    </div>
+    </div> -->
 
     <div class="container-fluid">
         <div class="row">
@@ -78,7 +77,7 @@
 
             <div class="col">
                 <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
-                <h1><a href="https://learncodeweb.com/phonegap/how-to-use-instascan-an-html5-qr-scanner/">How to use Instascan an HTML5 QR scanner</a></h1>
+                <h1><a href="https://learncodeweb.com/phonegap/how-to-use-instascan-an-html5-qr-scanner/">掃描QRCODE</a></h1>
                 <div class="col-sm-12">
                     <video id="preview" class="p-1 border" style="width:100%;"></video>
                 </div>
@@ -89,7 +88,8 @@
                         mirror: false
                     });
                     scanner.addListener('scan', function(content) {
-                        alert(content);
+                        // alert(content);
+                        window.open(content);
                         //window.location.href=content;
                     });
                     Instascan.Camera.getCameras().then(function(cameras) {
